@@ -3606,7 +3606,7 @@ tr:last-child td { border-bottom: none; }
           <li><a href="#" onclick="switchMainTab('t-sector'); renderSectors(); renderSectorChart(); return false;" style="color:var(--t3); text-decoration:none; font-weight:500; transition:color 0.15s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t3)'">Sector Analysis</a></li>
           <li><a href="https://github.com/MrPraneit/fii-dii-data#readme" target="_blank" rel="noopener" style="color:var(--t3); text-decoration:none; font-weight:500; transition:color 0.15s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t3)'">Documentation</a></li>
           <li><a href="/data-api.html" style="color:var(--t3); text-decoration:none; font-weight:500; transition:color 0.15s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t3)'">Data &amp; API</a></li>
-          <li><a href="/api/agents/docs" target="_blank" style="color:var(--t3); text-decoration:none; font-weight:500; transition:color 0.15s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t3)'">Agent API Docs</a></li>
+          <li><a href="https://fpi-dsi.onrender.com/api/agents/docs" target="_blank" style="color:var(--t3); text-decoration:none; font-weight:500; transition:color 0.15s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t3)'">Agent API Docs</a></li>
         </ul>
       </div>
     </div>
@@ -4067,7 +4067,7 @@ let _dealsLoaded = false;
 async function loadLargeDeals() {
   if (_dealsLoaded) return;
   try {
-    const res = await fetch('/api/large-deals');
+    const res = await fetch('https://fpi-dsi.onrender.com/api/large-deals');
     if (!res.ok) return; // NSE blocking or no data — keep panel hidden
     const data = await res.json();
     const rows = [
@@ -4098,7 +4098,7 @@ async function loadLargeDeals() {
 /* ── NSDL custodian-confirmed figure next to the provisional NSE number ── */
 async function loadNsdlConfirm() {
   try {
-    const res = await fetch('/api/fpi-daily');
+    const res = await fetch('https://fpi-dsi.onrender.com/api/fpi-daily');
     if (!res.ok) return;
     const data = await res.json();
     const row = (data.rows || [])[0] || data.latest;
@@ -5162,7 +5162,7 @@ async function fetchLiveNSE(isManual = false) {
   /* ── TIER 0: Trigger server-side NSE fetch + read fresh data ── */
   try {
     // Step 1: Tell server to fetch fresh data from NSE
-    const refreshRes = await fetch('/api/refresh', {
+    const refreshRes = await fetch('https://fpi-dsi.onrender.com/api/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       signal: AbortSignal.timeout(12000)
@@ -5495,7 +5495,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (btn) btn.innerHTML = `Loading Data...`;
 
   try {
-    const res = await fetch('/api/history-full');
+    const res = await fetch('https://fpi-dsi.onrender.com/api/history-full');
     if (res.ok) {
         const fullData = await res.json();
         if (fullData && fullData.length > 0) {
@@ -5534,7 +5534,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // Fetch Sector Data sequentially so UI is hydrated on click
   try {
-      const secRes = await fetch('/api/sectors');
+      const secRes = await fetch('https://fpi-dsi.onrender.com/api/sectors');
       if (secRes.ok) {
           const sdata = await secRes.json();
           if (sdata && sdata.length > 0) {
@@ -5643,7 +5643,7 @@ function setFlowView(cumulative) {
   if (bC) bC.style.opacity = cumulative ? '1' : '.55';
   if (rng) rng.style.display = cumulative ? '' : 'none';
   if (cumulative && !_niftyHist) {
-    fetch('/api/nifty-history').then(r => r.ok ? r.json() : null).then(rows => {
+    fetch('https://fpi-dsi.onrender.com/api/nifty-history').then(r => r.ok ? r.json() : null).then(rows => {
       if (Array.isArray(rows)) _niftyHist = rows;
       renderHistoryChart();
     }).catch(() => renderHistoryChart());
@@ -6637,7 +6637,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
     if (sub) {
       // Fetch current preferences from server
       try {
-        const res = await fetch('/api/subscribe-status', {
+        const res = await fetch('https://fpi-dsi.onrender.com/api/subscribe-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ endpoint: sub.endpoint })
@@ -6741,7 +6741,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
       const sub = await swRegistration.pushManager.getSubscription();
       if (!sub) return;
 
-      await fetch('/api/subscribe-preferences', {
+      await fetch('https://fpi-dsi.onrender.com/api/subscribe-preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ endpoint: sub.endpoint, categories: cats })
@@ -6761,7 +6761,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
     try {
       const sub = await swRegistration.pushManager.getSubscription();
       if (sub) {
-        await fetch('/api/unsubscribe', {
+        await fetch('https://fpi-dsi.onrender.com/api/unsubscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ endpoint: sub.endpoint })
@@ -6791,7 +6791,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
       });
 
       const categories = ['cash', 'fao', 'sectors']; // Enable all by default
-      await fetch('/api/subscribe', {
+      await fetch('https://fpi-dsi.onrender.com/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subscription: sub.toJSON(), categories })
@@ -6824,7 +6824,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
     const now = Date.now();
     if(agentDataLoadedAt > 0 && (now - agentDataLoadedAt) < AGENT_REFRESH_COOLDOWN) return;
     try {
-      const res = await fetch('/api/agents/status');
+      const res = await fetch('https://fpi-dsi.onrender.com/api/agents/status');
       const data = await res.json();
       
       let html = '';
@@ -6891,7 +6891,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
       });
       document.getElementById('agent-array-status').innerHTML = html;
       
-      const rRes = await fetch('/api/agents/regime');
+      const rRes = await fetch('https://fpi-dsi.onrender.com/api/agents/regime');
       const rData = await rRes.json();
       if(rData && rData.regime) {
         const regimeEmoji = {'STRONG_BULLISH':'🟢','MILD_BULLISH':'🟡','NEUTRAL':'⚪','MILD_BEARISH':'🟠','STRONG_BEARISH':'🔴'};
@@ -6916,7 +6916,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
     loader.style.display = 'block';
     
     try {
-      const res = await fetch('/api/agents/synthesis');
+      const res = await fetch('https://fpi-dsi.onrender.com/api/agents/synthesis');
       const data = await res.json();
       
       if(data.success) {
@@ -6976,7 +6976,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
     content.style.display = 'none';
 
     try {
-      const res = await fetch('/api/agents/synthesis');
+      const res = await fetch('https://fpi-dsi.onrender.com/api/agents/synthesis');
       const data = await res.json();
 
       if (data.success && data.synthesis) {
@@ -7026,7 +7026,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
     const sseDot = document.getElementById('sseDot');
     let evtSource;
     try {
-      evtSource = new EventSource('/api/stream');
+      evtSource = new EventSource('https://fpi-dsi.onrender.com/api/stream');
     } catch { return; }
 
     evtSource.onopen = () => {
@@ -7107,7 +7107,7 @@ function renderFnoHistoryChart(mode = _fnoHistoryMode) {
 
   async function fetchMarketData() {
     try {
-      const res = await fetch('/api/market', { signal: AbortSignal.timeout(8000) });
+      const res = await fetch('https://fpi-dsi.onrender.com/api/market', { signal: AbortSignal.timeout(8000) });
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
       _lastMarketData = data;
