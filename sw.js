@@ -36,7 +36,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   // Skip non-GET requests and API calls (always fresh)
   if (event.request.method !== 'GET') return;
-  if (event.request.url.includes('/api/')) return;
+  if (event.request.url.includes('https://fpi-dsi.onrender.com/api/')) return;
 
   // Cache same-origin requests only, keyed without the query string — the page
   // polls data files with ?t=<timestamp> cache-busters, and caching each unique
